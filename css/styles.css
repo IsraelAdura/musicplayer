@@ -1,0 +1,177 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#card {
+  position: relative;
+  overflow: hidden;
+  font-family: sans-serif;
+  /* background-blend-mode: luminosity; */
+  /* box-shadow: 0px 8px 20px rgba(black, 0); */
+  box-shadow: 0px 0px 0px black;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  width: 650px;
+  height: 350px;
+  padding:0 45px 1px 40px;
+}
+#card .meta {
+  /* margin-top: 215px; */
+  /* margin-left: 40px; */
+  position: absolute;
+  bottom: 20px;
+  left: 45px;
+  -webkit-transform: translateY(60%);
+          transform: translateY(60%);
+  opacity: 0;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+#card .artist {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  margin-bottom: 0;
+}
+#card .song {
+  font-weight: 300;
+  margin-top: 0;
+  letter-spacing: 1px;
+}
+#card:hover {
+  /* box-shadow: 0px 8px 20px rgba(black, 0.3); */
+}
+#card:hover .meta {
+  -webkit-transform: translateY(0%f);
+          transform: translateY(0%);
+  opacity: 1;
+}
+#card:hover .button {
+  -webkit-transform: translateY(0%);
+          transform: translateY(0%);
+  opacity: 1;
+}
+
+.art {
+  color: white;
+  background: #513D93 url("https://dl.dropbox.com/s/bhyk47vntgqbw9q/drake.png") no-repeat center;
+  background-size: cover;
+}
+#number{
+  font-size:70px;
+  font-family:tahoma;
+  font-style:bold;
+  padding-left:20px;
+  color:#00cdea;
+}
+#artist{
+  font-size:30px;
+  font-family:Arial, Helvetica, sans-serif;
+  color:;
+}
+#song{
+  font-size:;
+  font-family:"Comic Sans MS", cursive, sans-serif;
+  font-style:;
+  color:#00CDEA;
+}
+#album{
+  color:#d1ad2e;
+  font-size:30px;
+}
+#timer{
+  position:relative;
+  top:220px;
+  left:8px;
+}
+#duration{
+  position:relative;
+  top:180px;
+  left:;
+  float:right;
+  
+}
+#git{
+  color:white;
+  float:right;
+  background-color:;
+  position: relative;
+  top:40px;
+  font-style:tahoma;
+}
+#git:hover{
+  color:#deae20;
+  padding-right:20px;
+  text-decoration:none;
+  display:block;
+}
+#music{
+ padding-top: 5px;
+}
+.button {
+  position: absolute;
+  right: 40px;
+  bottom: 45px;
+  padding: 15px 30px;
+  font-size: 0.9em;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  background: -webkit-linear-gradient(45deg, #00CDEA, #50E5A0);
+  background: linear-gradient(45deg, #00CDEA, #50E5A0);
+  border-radius: 50px;
+  box-shadow: 0px 2px 5px transparent;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  -webkit-transform: translateY(80%);
+          transform: translateY(80%);
+  opacity: 0;
+}
+.button:hover {
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#play{
+    position:relative;
+    left:25px;
+    z-index:1;
+}
+#pause{
+   position:relative;
+   left:-25px;
+   z-index:0;
+   opacity:0;
+}
+
+#music-player{
+  padding-left:30px;
+  padding-bottom: 15px;
+  width: 650px;
+  height:auto;
+  opacity:0;
+  background: #00CDEA;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  
+}
+
+
