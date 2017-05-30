@@ -53,13 +53,15 @@
                     play.style.zIndex=0;
                     pause.style.zIndex=1;
                     musicIcon.className = 'fa fa-volume-up fa-5x animated fadeOut infinite';
-                    number.textContent = index+ 1 + '.'
+                    number.textContent =index+ 1 + '.'
                     artist.textContent =  songs.tracks[index].artist.name;
                     songTitle.textContent = songs.tracks[index].title;
                     album.textContent=songs.tracks[index].album.title;
                     musicIcon.textContent='';
-                   // var backgroundImage ="url(songs.tracks[index].album.thumbnail)"
-                    //card.style.backgroundImage =backgroundImage;
+                    var thumbnail=songs.tracks[index].album.thumbnail
+                    var backgroundImage =`url(${thumbnail})`;
+                    card.style.backgroundImage = backgroundImage;
+                
                 },
 
 
