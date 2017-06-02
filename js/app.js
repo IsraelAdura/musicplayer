@@ -59,8 +59,8 @@
                     album.textContent=songs.tracks[index].album.title;
                     musicIcon.textContent='';
                     var thumbnail=songs.tracks[index].album.thumbnail
-                    var backgroundImage =`url(${thumbnail})`;
-                    card.style.backgroundImage = backgroundImage;
+                    var backgroundImage = "url(" + thumbnail + ")";
+                    card.style.backgroundImage = #513D93 + ' ' + backgroundImage;
                 
                 },
 
