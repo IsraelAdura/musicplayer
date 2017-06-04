@@ -3,13 +3,34 @@
 
         var prevBtn =document.getElementById('prev');
         var nextBtn =document.getElementById('next');
+       
+         
+
+       // var volSlider =document.getElementById('volume');
+         
 
         var Player = function(playlist) {
           this.playlist = playlist;
           this.index = 0;
+          
+          playlist.forEach(function(song){
+            var trackDiv =document.createElement('div');
+            trackDiv.setAttribute('id','trackList');
+           
+              trackDiv.textContent=(playlist.indexOf(song) + 1 ) + '.  ' + song.title;
+           
+            
+            trackDiv.onclick=function(){
 
+              player.skipTo(playlist.indexOf(song))
+
+            }
+            list.appendChild(trackDiv);
+          })
         };
+
         Player.prototype = {
+          
           //play a song in the playlits
           play: function(index) {
 
@@ -25,12 +46,16 @@
             var pause =document.getElementById('pause');
             var card =document.getElementById('card');
             var duration =document.getElementById('duration');
+            var list=document.getElementById('list');
+
            
         
             var self = this;
             var music;
             index = typeof index === 'number' ? index : self.index;
             var track = self.playlist[index];
+            
+            //var v=volSlider.value;
 
             //if current track loaded,play. else load a new howl(object) . 
             if (track.howl) {
@@ -40,11 +65,14 @@
             
                 src: [ track.url ],
                 html5: true, 
+               // volume:v,
                 //on track playing
                onplay: function() {
                    
                     musicPlayer.style.opacity='1';
+                    //musicPlayer.style.display='block';
                     btn.style.display ='none';
+                    //for timer and Songslider to update
                     setInterval(self.timer.bind(self),1000/60)
                     duration.style.display='block';
                     duration.innerHTML = self.formatTime(Math.round(music.duration()));
@@ -53,15 +81,37 @@
                     play.style.zIndex=0;
                     pause.style.zIndex=1;
                     musicIcon.className = 'fa fa-volume-up fa-5x animated fadeOut infinite';
-                    number.textContent =index+ 1 + '.'
+                    number.textContent = index+ 1 + '.'
                     artist.textContent =  songs.tracks[index].artist.name;
                     songTitle.textContent = songs.tracks[index].title;
                     album.textContent=songs.tracks[index].album.title;
                     musicIcon.textContent='';
+
+                    //background image is set to dynamically change to that in json file.
                     var thumbnail=songs.tracks[index].album.thumbnail
                     var backgroundImage = "url(" + thumbnail + ")";
-                    card.style.backgroundImage = #513D93 + ' ' + backgroundImage;
-                
+                    card.style.backgroundImage =backgroundImage;
+                    //songs list hides upon play
+                    list.style.display='none';
+                    document.querySelector('.meta').style.display='block';
+                    document.querySelectorAll('.h')[0].style.display='block';
+
+
+                    //song slider appears after 200 millliseconds
+                    setTimeout(function(){
+                      songSlider.style.display='block'},200);
+                    //do certain things if certain keys are pressed
+                    document.onkeypress=function(k){
+                      if (k.keyCode==32 || k.code=='space'){
+                         music.pause()
+                      }
+                     else if(k.keyCode==115){
+                        music.stop();
+                      }
+                      else if(k.keyCode==13){
+                        player.skip('next');
+                      }
+                    }
                 },
 
 
@@ -75,6 +125,42 @@
                    // pause.style.display='none';
                     musicIcon.className = 'fa fa-music fa-5x animated pulse';
                     musicIcon.textContent='';
+                    document.onkeypress=function(k){
+                      if (k.keyCode==32 || k.code=='space'){
+                         music.play()
+                      }
+                     else if(k.keyCode==115){
+                        music.stop();
+                      }
+                      else if(k.keyCode==13){
+                        player.skip('next');
+                      }
+                     
+                    }
+                },
+                //on music stopping
+               onstop:function(){
+                 // musicPlayer.style.display='none';
+                 // btn.style.display='block'
+                //  document.querySelector('.meta').style.display='none';
+                  musicIcon.className='fa fa-music fa-5x fav';
+                  number.textContent='';
+                  //pause.className='fa fa-play-circle fa-5x'
+                 // setTimeout(function(){
+                    play.style.opacity=1;
+                    pause.style.opacity=0;
+                  //  },0)
+                  
+                  pause.style.zIndex=0;
+                  play.style.zIndex=1;
+
+                  //pause.className='fa fa-pause fa-4x'
+                 // document.getElementsByClassName('h')[0].style.display='none';
+                 // var h =document.querySelectorAll('.h');
+                 // h[0].style.display='none';
+                 // h[1].style.display='none';
+                 // h[2].style.display='none';
+
                 },
                 //when music finish playing, wait 2 seconds then play next track
                 onend:function(){
@@ -140,9 +226,17 @@
                   }
                 }
 
-                if (self.playlist[self.index].howl) {
-                  self.playlist[self.index].howl.stop();
-                }
+                
+                self.skipTo(index);
+              },
+              skipTo:function(index){
+                var self=this;
+                var music =self.playlist[self.index].howl;
+              if (music) {
+                music.stop();
+               }
+
+                // Play the new track.
                 self.play(index);
               },
 
@@ -155,16 +249,20 @@
                 music.stop();
                 self.play(index);
               },
-              //display time played 
+              //display length of time music has played
               timer: function() {
+                  var songSlider =document.getElementById('songSlider');
                   var timeDisplay =document.getElementById('timer'); 
                   var self = this;
                   var music = self.playlist[self.index].howl;
      
-                  var seek = music.seek() || 0;
+                  var seek = music.seek();
                   timeDisplay.innerHTML = self.formatTime(Math.round(seek));
+                  songSlider.value = (((seek / music.duration()) * 100) || 0);
+          
 
                 },
+               
               formatTime:function(secs){
                 var minutes = Math.floor(secs / 60) || 0;
                 var seconds = (secs - minutes * 60) || 0;
@@ -172,7 +270,36 @@
                   seconds = '0'+seconds;
                 }
                 return minutes + ':' + seconds;
-               }
+               },
+
+              toggle:function(){
+                 var listToggle=document.getElementById('listToggle');
+                
+
+                btn.style.display ='none';
+
+              
+                var display = (list.style.display === 'block') ? 'none' : 'block';
+
+                setTimeout(function() {
+                  list.style.display = display;
+                }, (display === 'block') ? 0 : 200);
+
+                list.className = 'animated pulse';
+                 },
+             
+              shuffle:function(index){
+                 var random=document.getElementById('random');
+                 var self =this;
+                 // var random =document.getElementById('random');
+
+                  var music = self.playlist[self.index].howl;
+                  music.stop();
+
+                  self.play(index);
+
+               
+              }
 
             };
               //set an instance of the Player constructor and pass the playlist into it
@@ -193,13 +320,36 @@
               player.skip('prev');
             });
             nextBtn.addEventListener('click', function() {
-              player.skip('next');
+              player.skip('next ');
             });
             repeat.addEventListener('click', function() {
               player.repeat(this);
             });
+           listToggle.addEventListener('click', function() {
+            player.toggle();
+
+            });
+
+           random.addEventListener('click', function() {
+            var random =Math.floor(Math.random()*(songs.tracks.length-1));
+
+            player.shuffle(random);
+            });
+            //var songSlider =document.getElementById('songSlider');
+          
+          //songSlider.addEventListener('change', function(v) {
+            //  player.seek();
+            //});
+
+           //volumeSlider.addEventListener('change', function() {
+            //  player.volume();
+            //});
+          
+           
+
               //upon loading page load all songs and cache
-              window.onload=function(){
+             window.onload=function(){
+
 
                for (var i =0; i<songs.tracks.length; i++){  
                var tracks =[songs.tracks[i].url];
@@ -208,5 +358,5 @@
                song.src = allSongs;
                
               }
-          }
+          };
     })();
