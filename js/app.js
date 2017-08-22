@@ -4,9 +4,34 @@
         var prevBtn =document.getElementById('prev');
         var nextBtn =document.getElementById('next');
        
-         
+          //using fetch api
+        /*      
 
-       // var volSlider =document.getElementById('volume');
+                    var endPoint = 'http://gplayer.herokuapp.com/api/playlist/top-10';
+                      fetch(endPoint,{mode:'no-cors'}).then(function(blob){
+                        return blob.json()
+                        }).then(function(data){
+                          return (songs = data);
+                           })
+            */
+             
+               // using xmlhttp request
+               /* var songs=[];
+                var xhr = new XMLHttpRequest();
+                var url = 'http://gplayer.herokuapp.com/api/playlist/top-10';
+                var songs;
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                      
+                        //console.log(JSON.parse(xhr.responseText));
+                    songs=(JSON.parse(xhr.responseText));
+                    }
+                  
+                };
+                xhr.open("GET", url, true);
+                xhr.send();  */
+    
+              
          
 
         var Player = function(playlist) {
@@ -55,7 +80,7 @@
             index = typeof index === 'number' ? index : self.index;
             var track = self.playlist[index];
             
-            //var v=volSlider.value;
+           
 
             //if current track loaded,play. else load a new howl(object) . 
             if (track.howl) {
@@ -65,7 +90,7 @@
             
                 src: [ track.url ],
                 html5: true, 
-               // volume:v,
+              
                 //on track playing
                onplay: function() {
                    
@@ -86,6 +111,8 @@
                     songTitle.textContent = songs.tracks[index].title;
                     album.textContent=songs.tracks[index].album.title;
                     musicIcon.textContent='';
+                    repeat.className='fa fa-repeat fa-3x';
+
 
                     //background image is set to dynamically change to that in json file.
                     var thumbnail=songs.tracks[index].album.thumbnail
@@ -140,26 +167,15 @@
                 },
                 //on music stopping
                onstop:function(){
-                 // musicPlayer.style.display='none';
-                 // btn.style.display='block'
-                //  document.querySelector('.meta').style.display='none';
+                 
                   musicIcon.className='fa fa-music fa-5x fav';
                   number.textContent='';
-                  //pause.className='fa fa-play-circle fa-5x'
-                 // setTimeout(function(){
                     play.style.opacity=1;
                     pause.style.opacity=0;
-                  //  },0)
+                 
                   
                   pause.style.zIndex=0;
                   play.style.zIndex=1;
-
-                  //pause.className='fa fa-pause fa-4x'
-                 // document.getElementsByClassName('h')[0].style.display='none';
-                 // var h =document.querySelectorAll('.h');
-                 // h[0].style.display='none';
-                 // h[1].style.display='none';
-                 // h[2].style.display='none';
 
                 },
                 //when music finish playing, wait 2 seconds then play next track
@@ -240,14 +256,18 @@
                 self.play(index);
               },
 
-              //repeat track playing
+             //repeat track playing
               repeat :function(index){
                 var self =this;
 
                 var repeat =document.getElementById('repeat');
                 var music = self.playlist[self.index].howl;
+               setTimeout(function(){
                 music.stop();
                 self.play(index);
+              }, music.duration()*990)
+               repeat.className='fa fa-repeat fa-3x text-danger';
+                 
               },
               //display length of time music has played
               timer: function() {
@@ -262,6 +282,17 @@
           
 
                 },
+                 seek: function(per) {
+                    var self = this;
+
+                    // Get the Howl we want to manipulate.
+                    var music = self.playlist[self.index].howl;
+
+                    // Convert the percent into a seek position.
+                    if (music.playing()) {
+                      music.seek(music.duration() * per);
+                    }
+                  },
                
               formatTime:function(secs){
                 var minutes = Math.floor(secs / 60) || 0;
@@ -299,12 +330,22 @@
                   self.play(index);
 
                
-              }
+              }  
 
             };
-              //set an instance of the Player constructor and pass the playlist into it
-            var player = new Player(songs.tracks);
+              //set an instance of the Player constructor and pass the playlist into it.
 
+              //if is_external property is false.
+
+                 var isExt=(songs.tracks).filter(function(ext){
+  
+                  if (ext.is_external==false){
+                  ext.url='http://southpawgroup.com/gidimusicplayer/gidimusic/newplayer/songs/Various/' + ext.url; 
+                       }
+                 return (ext.url)  
+                })
+
+            var player = new Player(isExt);
             //listen for onclick events
 
             btn.addEventListener('click', function() {
@@ -335,16 +376,11 @@
 
             player.shuffle(random);
             });
-            //var songSlider =document.getElementById('songSlider');
-          
-          //songSlider.addEventListener('change', function(v) {
-            //  player.seek();
-            //});
-
-           //volumeSlider.addEventListener('change', function() {
-            //  player.volume();
-            //});
-          
+           
+            songSlider.addEventListener('click', function(event) {
+              player.seek(event.clientX / window.innerWidth);
+            });
+           
            
 
               //upon loading page load all songs and cache
